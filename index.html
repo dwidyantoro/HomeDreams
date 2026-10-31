@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +9,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!--script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script-->
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     <script>
         tailwind.config = {
             theme: {
@@ -42,42 +45,68 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(229, 231, 235, 0.8);
         }
+
         .step-transition {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         @media print {
-            .no-print { display: none !important; }
-            .print-only { display: block !important; }
-            body { background: white !important; color: black !important; }
-            .glass-card { border: none !important; shadow: none !important; background: transparent !important; }
+            .no-print {
+                display: none !important;
+            }
+
+            .print-only {
+                display: block !important;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            .glass-card {
+                border: none !important;
+                shadow: none !important;
+                background: transparent !important;
+            }
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+<body
+    class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
 
     <!-- Header Navigation -->
     <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 no-print">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-accent-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                <div
+                    class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-accent-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
                     <i data-lucide="home" class="w-5 h-5"></i>
                 </div>
                 <div>
-                    <span class="font-bold text-lg text-slate-900 tracking-tight block leading-none">NestEcosystem</span>
+                    <span
+                        class="font-bold text-lg text-slate-900 tracking-tight block leading-none">NestEcosystem</span>
                     <span class="text-xs text-slate-500 font-medium">Unified Home & Lifestyle Loans</span>
                 </div>
             </div>
 
             <!-- Currency & Capacity Summary Badge -->
             <div class="flex items-center space-x-4">
-                <div class="hidden md:flex items-center bg-slate-100 rounded-full p-1 border border-slate-200 text-xs font-semibold">
-                    <button id="currIDR" onclick="setCurrency('IDR')" class="px-3 py-1 rounded-full bg-white text-slate-900 shadow-sm transition-all">IDR (Rp)</button>
-                    <button id="currUSD" onclick="setCurrency('USD')" class="px-3 py-1 rounded-full text-slate-600 hover:text-slate-900 transition-all">USD ($)</button>
+                <div
+                    class="hidden md:flex items-center bg-slate-100 rounded-full p-1 border border-slate-200 text-xs font-semibold">
+                    <button id="currIDR" onclick="setCurrency('IDR')"
+                        class="px-3 py-1 rounded-full bg-white text-slate-900 shadow-sm transition-all">IDR
+                        (Rp)</button>
+                    <button id="currUSD" onclick="setCurrency('USD')"
+                        class="px-3 py-1 rounded-full text-slate-600 hover:text-slate-900 transition-all">USD
+                        ($)</button>
                 </div>
                 <div class="bg-brand-50 border border-brand-100 px-3 py-1.5 rounded-xl flex items-center space-x-2">
                     <i data-lucide="calculator" class="w-4 h-4 text-brand-600"></i>
                     <div>
-                        <div class="text-[10px] text-brand-700 font-semibold uppercase tracking-wider">Est. Monthly Outflow</div>
+                        <div class="text-[10px] text-brand-700 font-semibold uppercase tracking-wider">Est. Monthly
+                            Outflow</div>
                         <div id="headerEstMonthly" class="text-sm font-bold text-brand-900">Rp 0</div>
                     </div>
                 </div>
@@ -91,22 +120,41 @@
         <!-- Progress Tracker Bar -->
         <div class="mb-8 no-print">
             <div class="flex items-center justify-between mb-2 px-1">
-                <span id="stepTitleDisplay" class="text-xs font-bold uppercase tracking-wider text-brand-600">Step 1 of 8: Financial Capacity</span>
+                <span id="stepTitleDisplay" class="text-xs font-bold uppercase tracking-wider text-brand-600">Step 1 of
+                    8: Financial Capacity</span>
                 <span id="stepPercentDisplay" class="text-xs font-bold text-slate-500">12% Completed</span>
             </div>
             <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden p-0.5">
-                <div id="progressBar" class="bg-gradient-to-r from-brand-500 to-accent-500 h-full rounded-full transition-all duration-500 ease-out" style="width: 12.5%;"></div>
+                <div id="progressBar"
+                    class="bg-gradient-to-r from-brand-500 to-accent-500 h-full rounded-full transition-all duration-500 ease-out"
+                    style="width: 12.5%;"></div>
             </div>
             <!-- Interactive Step Indicator Pills -->
             <div class="grid grid-cols-4 md:grid-cols-8 gap-2 mt-4 text-center text-xs font-medium">
-                <button onclick="goToStep(1)" id="pill-1" class="py-2 px-1 rounded-lg border border-brand-500 bg-brand-50 text-brand-700 font-semibold shadow-sm transition">1. Income</button>
-                <button onclick="goToStep(2)" id="pill-2" class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">2. Location</button>
-                <button onclick="goToStep(3)" id="pill-3" class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">3. Bundle</button>
-                <button onclick="goToStep(4)" id="pill-4" class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">4. Property</button>
-                <button onclick="goToStep(5)" id="pill-5" class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">5. Interior</button>
-                <button onclick="goToStep(6)" id="pill-6" class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">6. Exterior</button>
-                <button onclick="goToStep(7)" id="pill-7" class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">7. Vehicle</button>
-                <button onclick="goToStep(8)" id="pill-8" class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">8. Quote</button>
+                <button onclick="goToStep(1)" id="pill-1"
+                    class="py-2 px-1 rounded-lg border border-brand-500 bg-brand-50 text-brand-700 font-semibold shadow-sm transition">1.
+                    Income</button>
+                <button onclick="goToStep(2)" id="pill-2"
+                    class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">2.
+                    Location</button>
+                <button onclick="goToStep(3)" id="pill-3"
+                    class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">3.
+                    Bundle</button>
+                <button onclick="goToStep(4)" id="pill-4"
+                    class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">4.
+                    Property</button>
+                <button onclick="goToStep(5)" id="pill-5"
+                    class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">5.
+                    Interior</button>
+                <button onclick="goToStep(6)" id="pill-6"
+                    class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">6.
+                    Exterior</button>
+                <button onclick="goToStep(7)" id="pill-7"
+                    class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">7.
+                    Vehicle</button>
+                <button onclick="goToStep(8)" id="pill-8"
+                    class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">8.
+                    Quote</button>
             </div>
         </div>
 
@@ -114,36 +162,49 @@
         <div class="relative">
 
             <!-- STEP 1: FINANCIAL PROFILE -->
-            <div id="step-1" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
+            <div id="step-1"
+                class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
                 <div class="max-w-2xl mx-auto space-y-6">
                     <div class="text-center space-y-2">
-                        <div class="w-12 h-12 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center mx-auto mb-2">
+                        <div
+                            class="w-12 h-12 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center mx-auto mb-2">
                             <i data-lucide="wallet" class="w-6 h-6"></i>
                         </div>
                         <h2 class="text-2xl font-bold text-slate-900">Your Financial Profile</h2>
-                        <p class="text-slate-500 text-sm">Let’s calculate your safe borrowing limits to customize your ecosystem loan options.</p>
+                        <p class="text-slate-500 text-sm">Let’s calculate your safe borrowing limits to customize your
+                            ecosystem loan options.</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                         <div class="space-y-2">
-                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Monthly Net Income</label>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Monthly Net
+                                Income</label>
                             <div class="relative rounded-xl shadow-sm">
-                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 font-semibold" id="incomeCurrSymbol">Rp</div>
-                                <input type="number" id="monthlyIncome" value="35000000" oninput="calculateFinancialCapacity()" class="block w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-slate-900 font-semibold transition">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 font-semibold"
+                                    id="incomeCurrSymbol">Rp</div>
+                                <input type="number" id="monthlyIncome" value="35000000"
+                                    oninput="calculateFinancialCapacity()"
+                                    class="block w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-slate-900 font-semibold transition">
                             </div>
                         </div>
 
                         <div class="space-y-2">
-                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Existing Monthly Obligations</label>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Existing
+                                Monthly Obligations</label>
                             <div class="relative rounded-xl shadow-sm">
-                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 font-semibold" id="debtCurrSymbol">Rp</div>
-                                <input type="number" id="existingDebt" value="3000000" oninput="calculateFinancialCapacity()" class="block w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-slate-900 font-semibold transition">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 font-semibold"
+                                    id="debtCurrSymbol">Rp</div>
+                                <input type="number" id="existingDebt" value="3000000"
+                                    oninput="calculateFinancialCapacity()"
+                                    class="block w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-slate-900 font-semibold transition">
                             </div>
                         </div>
 
                         <div class="space-y-2">
-                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Employment Status</label>
-                            <select id="employmentStatus" class="block w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-slate-900 font-medium transition">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Employment
+                                Status</label>
+                            <select id="employmentStatus"
+                                class="block w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-slate-900 font-medium transition">
                                 <option value="fulltime">Full-Time Employee (> 3 Yrs History)</option>
                                 <option value="corporate">Corporate Manager / Executive</option>
                                 <option value="entrepreneur">Business Owner / Entrepreneur</option>
@@ -152,8 +213,10 @@
                         </div>
 
                         <div class="space-y-2">
-                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Preferred Loan Tenor</label>
-                            <select id="loanTenor" onchange="calculateFinancialCapacity()" class="block w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-slate-900 font-medium transition">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Preferred
+                                Loan Tenor</label>
+                            <select id="loanTenor" onchange="calculateFinancialCapacity()"
+                                class="block w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-slate-900 font-medium transition">
                                 <option value="5">5 Years (60 Months)</option>
                                 <option value="10">10 Years (120 Months)</option>
                                 <option value="15" selected>15 Years (180 Months)</option>
@@ -165,11 +228,14 @@
                     <!-- Live Debt Capacity Meter Card -->
                     <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                         <div class="flex justify-between items-center text-xs">
-                            <span class="font-bold text-slate-600 uppercase tracking-wider">Recommended Max Monthly Installment (40% DTI)</span>
-                            <span id="maxMonthlyBudgetDisplay" class="font-bold text-brand-700 text-sm">Rp 11,000,000</span>
+                            <span class="font-bold text-slate-600 uppercase tracking-wider">Recommended Max Monthly
+                                Installment (40% DTI)</span>
+                            <span id="maxMonthlyBudgetDisplay" class="font-bold text-brand-700 text-sm">Rp
+                                11,000,000</span>
                         </div>
                         <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                            <div id="dtiGauge" class="bg-brand-500 h-full rounded-full transition-all duration-300" style="width: 40%;"></div>
+                            <div id="dtiGauge" class="bg-brand-500 h-full rounded-full transition-all duration-300"
+                                style="width: 40%;"></div>
                         </div>
                         <div class="flex justify-between text-[11px] text-slate-500">
                             <span>Safe DTI Limit: 40%</span>
@@ -180,38 +246,53 @@
             </div>
 
             <!-- STEP 2: LOCATION SELECTOR -->
-            <div id="step-2" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
+            <div id="step-2"
+                class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
                 <div class="max-w-3xl mx-auto space-y-6">
                     <div class="text-center space-y-2">
-                        <div class="w-12 h-12 bg-accent-500/10 text-accent-600 rounded-2xl flex items-center justify-center mx-auto mb-2">
+                        <div
+                            class="w-12 h-12 bg-accent-500/10 text-accent-600 rounded-2xl flex items-center justify-center mx-auto mb-2">
                             <i data-lucide="map-pin" class="w-6 h-6"></i>
                         </div>
                         <h2 class="text-2xl font-bold text-slate-900">Project Location</h2>
-                        <p class="text-slate-500 text-sm">Choose the primary region for your home property and localized installation services.</p>
+                        <p class="text-slate-500 text-sm">Choose the primary region for your home property and localized
+                            installation services.</p>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
                         <!-- Location Option Cards -->
-                        <div onclick="selectLocation('Jakarta')" id="loc-Jakarta" class="location-card cursor-pointer p-5 rounded-2xl border-2 border-brand-500 bg-brand-50/50 hover:shadow-md transition text-center space-y-2">
-                            <div class="w-10 h-10 rounded-full bg-brand-500 text-white flex items-center justify-center mx-auto font-bold text-sm">JKT</div>
+                        <div onclick="selectLocation('Jakarta')" id="loc-Jakarta"
+                            class="location-card cursor-pointer p-5 rounded-2xl border-2 border-brand-500 bg-brand-50/50 hover:shadow-md transition text-center space-y-2">
+                            <div
+                                class="w-10 h-10 rounded-full bg-brand-500 text-white flex items-center justify-center mx-auto font-bold text-sm">
+                                JKT</div>
                             <div class="font-bold text-slate-900">Jakarta</div>
                             <div class="text-xs text-slate-500">DKI & Greater Metropolitan</div>
                         </div>
 
-                        <div onclick="selectLocation('Bandung')" id="loc-Bandung" class="location-card cursor-pointer p-5 rounded-2xl border-2 border-slate-200 hover:border-brand-300 transition text-center space-y-2">
-                            <div class="w-10 h-10 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center mx-auto font-bold text-sm">BDG</div>
+                        <div onclick="selectLocation('Bandung')" id="loc-Bandung"
+                            class="location-card cursor-pointer p-5 rounded-2xl border-2 border-slate-200 hover:border-brand-300 transition text-center space-y-2">
+                            <div
+                                class="w-10 h-10 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center mx-auto font-bold text-sm">
+                                BDG</div>
                             <div class="font-bold text-slate-900">Bandung</div>
                             <div class="text-xs text-slate-500">West Java Highlands</div>
                         </div>
 
-                        <div onclick="selectLocation('Surabaya')" id="loc-Surabaya" class="location-card cursor-pointer p-5 rounded-2xl border-2 border-slate-200 hover:border-brand-300 transition text-center space-y-2">
-                            <div class="w-10 h-10 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center mx-auto font-bold text-sm">SUB</div>
+                        <div onclick="selectLocation('Surabaya')" id="loc-Surabaya"
+                            class="location-card cursor-pointer p-5 rounded-2xl border-2 border-slate-200 hover:border-brand-300 transition text-center space-y-2">
+                            <div
+                                class="w-10 h-10 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center mx-auto font-bold text-sm">
+                                SUB</div>
                             <div class="font-bold text-slate-900">Surabaya</div>
                             <div class="text-xs text-slate-500">East Java Hub</div>
                         </div>
 
-                        <div onclick="selectLocation('Bali')" id="loc-Bali" class="location-card cursor-pointer p-5 rounded-2xl border-2 border-slate-200 hover:border-brand-300 transition text-center space-y-2">
-                            <div class="w-10 h-10 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center mx-auto font-bold text-sm">DPS</div>
+                        <div onclick="selectLocation('Bali')" id="loc-Bali"
+                            class="location-card cursor-pointer p-5 rounded-2xl border-2 border-slate-200 hover:border-brand-300 transition text-center space-y-2">
+                            <div
+                                class="w-10 h-10 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center mx-auto font-bold text-sm">
+                                DPS</div>
                             <div class="font-bold text-slate-900">Bali</div>
                             <div class="text-xs text-slate-500">Denpasar & Badung</div>
                         </div>
@@ -220,67 +301,82 @@
             </div>
 
             <!-- STEP 3: CATEGORY CHECKBOX SELECTOR -->
-            <div id="step-3" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
+            <div id="step-3"
+                class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
                 <div class="max-w-3xl mx-auto space-y-6">
                     <div class="text-center space-y-2">
-                        <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-2">
+                        <div
+                            class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-2">
                             <i data-lucide="layers" class="w-6 h-6"></i>
                         </div>
                         <h2 class="text-2xl font-bold text-slate-900">Customize Ecosystem Bundle</h2>
-                        <p class="text-slate-500 text-sm">Select which elements you want to group into a single monthly loan repayment.</p>
+                        <p class="text-slate-500 text-sm">Select which elements you want to group into a single monthly
+                            loan repayment.</p>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                         <!-- Category Toggles -->
-                        <label class="relative flex items-start p-5 rounded-2xl border-2 border-slate-200 cursor-pointer hover:bg-slate-50 transition selection-box">
+                        <label
+                            class="relative flex items-start p-5 rounded-2xl border-2 border-slate-200 cursor-pointer hover:bg-slate-50 transition selection-box">
                             <div class="flex items-center h-6">
-                                <input type="checkbox" id="catHome" checked onchange="toggleCategory('home')" class="w-5 h-5 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
+                                <input type="checkbox" id="catHome" checked onchange="toggleCategory('home')"
+                                    class="w-5 h-5 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
                             </div>
                             <div class="ml-4 space-y-1">
                                 <div class="flex items-center space-x-2">
                                     <i data-lucide="home" class="w-4 h-4 text-brand-600"></i>
                                     <span class="font-bold text-slate-900">1. Property & Real Estate</span>
                                 </div>
-                                <p class="text-xs text-slate-500">Houses, Townhouses, and Modern Apartments from Partner Developers.</p>
+                                <p class="text-xs text-slate-500">Houses, Townhouses, and Modern Apartments from Partner
+                                    Developers.</p>
                             </div>
                         </label>
 
-                        <label class="relative flex items-start p-5 rounded-2xl border-2 border-slate-200 cursor-pointer hover:bg-slate-50 transition selection-box">
+                        <label
+                            class="relative flex items-start p-5 rounded-2xl border-2 border-slate-200 cursor-pointer hover:bg-slate-50 transition selection-box">
                             <div class="flex items-center h-6">
-                                <input type="checkbox" id="catInterior" checked onchange="toggleCategory('interior')" class="w-5 h-5 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
+                                <input type="checkbox" id="catInterior" checked onchange="toggleCategory('interior')"
+                                    class="w-5 h-5 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
                             </div>
                             <div class="ml-4 space-y-1">
                                 <div class="flex items-center space-x-2">
                                     <i data-lucide="sofa" class="w-4 h-4 text-accent-600"></i>
                                     <span class="font-bold text-slate-900">2. Interior & Living</span>
                                 </div>
-                                <p class="text-xs text-slate-500">Modular Kitchen Sets, Dining Packages, Smart Home Automation.</p>
+                                <p class="text-xs text-slate-500">Modular Kitchen Sets, Dining Packages, Smart Home
+                                    Automation.</p>
                             </div>
                         </label>
 
-                        <label class="relative flex items-start p-5 rounded-2xl border-2 border-slate-200 cursor-pointer hover:bg-slate-50 transition selection-box">
+                        <label
+                            class="relative flex items-start p-5 rounded-2xl border-2 border-slate-200 cursor-pointer hover:bg-slate-50 transition selection-box">
                             <div class="flex items-center h-6">
-                                <input type="checkbox" id="catExterior" checked onchange="toggleCategory('exterior')" class="w-5 h-5 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
+                                <input type="checkbox" id="catExterior" checked onchange="toggleCategory('exterior')"
+                                    class="w-5 h-5 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
                             </div>
                             <div class="ml-4 space-y-1">
                                 <div class="flex items-center space-x-2">
                                     <i data-lucide="shield" class="w-4 h-4 text-emerald-600"></i>
                                     <span class="font-bold text-slate-900">3. Exterior & Canopy</span>
                                 </div>
-                                <p class="text-xs text-slate-500">Carport Canopies, Automatic Security Gates, Landscaping.</p>
+                                <p class="text-xs text-slate-500">Carport Canopies, Automatic Security Gates,
+                                    Landscaping.</p>
                             </div>
                         </label>
 
-                        <label class="relative flex items-start p-5 rounded-2xl border-2 border-slate-200 cursor-pointer hover:bg-slate-50 transition selection-box">
+                        <label
+                            class="relative flex items-start p-5 rounded-2xl border-2 border-slate-200 cursor-pointer hover:bg-slate-50 transition selection-box">
                             <div class="flex items-center h-6">
-                                <input type="checkbox" id="catCar" checked onchange="toggleCategory('car')" class="w-5 h-5 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
+                                <input type="checkbox" id="catCar" checked onchange="toggleCategory('car')"
+                                    class="w-5 h-5 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
                             </div>
                             <div class="ml-4 space-y-1">
                                 <div class="flex items-center space-x-2">
                                     <i data-lucide="car" class="w-4 h-4 text-rose-600"></i>
                                     <span class="font-bold text-slate-900">4. Vehicle & Mobility</span>
                                 </div>
-                                <p class="text-xs text-slate-500">Family EVs, Premium Sedans, SUVs from Partner Dealerships.</p>
+                                <p class="text-xs text-slate-500">Family EVs, Premium Sedans, SUVs from Partner
+                                    Dealerships.</p>
                             </div>
                         </label>
                     </div>
@@ -288,32 +384,39 @@
             </div>
 
             <!-- STEP 4: PROPERTY SELECTION -->
-            <div id="step-4" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
+            <div id="step-4"
+                class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
                 <div class="space-y-6">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div
+                        class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                         <div>
-                            <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Partner Module</span>
+                            <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Partner
+                                Module</span>
                             <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
                                 <span>Select Property Partner Listing</span>
-                                <span id="propLocBadge" class="text-xs font-normal px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">Jakarta</span>
+                                <span id="propLocBadge"
+                                    class="text-xs font-normal px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">Jakarta</span>
                             </h2>
                         </div>
                         <div class="text-xs text-slate-500">Showing verified listings with pre-cleared land titles</div>
                     </div>
 
                     <!-- Property Cards Grid -->
-                    <div id="propertyGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div id="homeGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <!-- Rendered dynamically -->
                     </div>
                 </div>
             </div>
 
             <!-- STEP 5: INTERIOR SELECTION -->
-            <div id="step-5" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
+            <div id="step-5"
+                class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
                 <div class="space-y-6">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div
+                        class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                         <div>
-                            <span class="text-xs font-bold text-accent-600 uppercase tracking-wider">Interior Design Vendors</span>
+                            <span class="text-xs font-bold text-accent-600 uppercase tracking-wider">Interior Design
+                                Vendors</span>
                             <h2 class="text-xl font-bold text-slate-900">Select Interior & Furnishing Bundle</h2>
                         </div>
                         <div class="text-xs text-slate-500">Includes professional measuring & full setup</div>
@@ -327,11 +430,14 @@
             </div>
 
             <!-- STEP 6: EXTERIOR SELECTION -->
-            <div id="step-6" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
+            <div id="step-6"
+                class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
                 <div class="space-y-6">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div
+                        class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                         <div>
-                            <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Exterior Contractors</span>
+                            <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Exterior
+                                Contractors</span>
                             <h2 class="text-xl font-bold text-slate-900">Select Exterior Structures & Gate</h2>
                         </div>
                         <div class="text-xs text-slate-500">Weather-proofed with 5-year structural warranty</div>
@@ -345,11 +451,14 @@
             </div>
 
             <!-- STEP 7: CAR SELECTION -->
-            <div id="step-7" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
+            <div id="step-7"
+                class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
                 <div class="space-y-6">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div
+                        class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                         <div>
-                            <span class="text-xs font-bold text-rose-600 uppercase tracking-wider">Automotive Partners</span>
+                            <span class="text-xs font-bold text-rose-600 uppercase tracking-wider">Automotive
+                                Partners</span>
                             <h2 class="text-xl font-bold text-slate-900">Select Family Vehicle</h2>
                         </div>
                         <div class="text-xs text-slate-500">Bundled auto insurance & free 3-year service included</div>
@@ -363,18 +472,23 @@
             </div>
 
             <!-- STEP 8: SUMMARY & UNIFIED QUOTE RECEIPT -->
-            <div id="step-8" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
+            <div id="step-8"
+                class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
                 <div class="max-w-4xl mx-auto space-y-8">
-                    
+
                     <div class="text-center space-y-2">
-                        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold uppercase tracking-wider">Verified Bundle Assessment</span>
+                        <span
+                            class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold uppercase tracking-wider">Verified
+                            Bundle Assessment</span>
                         <h2 class="text-3xl font-extrabold text-slate-900">Unified Loan Quote Summary</h2>
-                        <p class="text-slate-500 text-sm">Review your custom ecosystem package breakdown and simulated bank repayment plan.</p>
+                        <p class="text-slate-500 text-sm">Review your custom ecosystem package breakdown and simulated
+                            bank repayment plan.</p>
                     </div>
 
                     <!-- Receipt Container -->
-                    <div id="printableQuote" class="bg-slate-50 border border-slate-200 rounded-2xl p-6 md:p-8 space-y-6">
-                        
+                    <div id="printableQuote"
+                        class="bg-slate-50 border border-slate-200 rounded-2xl p-6 md:p-8 space-y-6">
+
                         <!-- Header / Metadata -->
                         <div class="flex flex-col md:flex-row justify-between border-b border-slate-200 pb-6 gap-4">
                             <div>
@@ -391,7 +505,8 @@
 
                         <!-- Selected Items Table -->
                         <div class="space-y-3">
-                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Bundled Ecosystem Assets</div>
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Bundled Ecosystem
+                                Assets</div>
                             <div id="quoteItemsList" class="divide-y divide-slate-200">
                                 <!-- Dynamic breakdown rows -->
                             </div>
@@ -411,30 +526,39 @@
                                 </div>
                             </div>
 
-                            <div class="bg-gradient-to-br from-brand-900 to-slate-900 text-white p-5 rounded-xl space-y-2 shadow-lg">
-                                <div class="text-xs font-semibold text-brand-300 uppercase tracking-wider">Unified Monthly Repayment</div>
+                            <div
+                                class="bg-gradient-to-br from-brand-900 to-slate-900 text-white p-5 rounded-xl space-y-2 shadow-lg">
+                                <div class="text-xs font-semibold text-brand-300 uppercase tracking-wider">Unified
+                                    Monthly Repayment</div>
                                 <div id="quoteGrandMonthly" class="text-3xl font-extrabold text-white">Rp 0</div>
-                                <div class="text-[11px] text-brand-200">Single automatic debited payment across all partner items</div>
+                                <div class="text-[11px] text-brand-200">Single automatic debited payment across all
+                                    partner items</div>
                             </div>
                         </div>
 
                         <!-- Affordability Analysis Gauge -->
-                        <div id="affordabilityAlert" class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start space-x-3">
+                        <div id="affordabilityAlert"
+                            class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start space-x-3">
                             <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
                             <div>
-                                <div id="affordabilityStatusTitle" class="font-bold text-emerald-900 text-sm">Excellent Financial Capacity</div>
-                                <div id="affordabilityStatusDesc" class="text-xs text-emerald-700">Your total estimated monthly outflow falls comfortably within your recommended maximum budget limit.</div>
+                                <div id="affordabilityStatusTitle" class="font-bold text-emerald-900 text-sm">Excellent
+                                    Financial Capacity</div>
+                                <div id="affordabilityStatusDesc" class="text-xs text-emerald-700">Your total estimated
+                                    monthly outflow falls comfortably within your recommended maximum budget limit.
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Action Controls -->
                     <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 no-print">
-                        <button onclick="window.print()" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold flex items-center justify-center space-x-2 transition">
+                        <button onclick="window.print()"
+                            class="w-full sm:w-auto px-6 py-3 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold flex items-center justify-center space-x-2 transition">
                             <i data-lucide="printer" class="w-4 h-4"></i>
                             <span>Print / Download Quote PDF</span>
                         </button>
-                        <button onclick="submitApplication()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 hover:from-brand-500 hover:to-accent-500 text-white font-bold flex items-center justify-center space-x-2 shadow-lg shadow-brand-500/25 transition">
+                        <button onclick="submitApplication()"
+                            class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 hover:from-brand-500 hover:to-accent-500 text-white font-bold flex items-center justify-center space-x-2 shadow-lg shadow-brand-500/25 transition">
                             <i data-lucide="send" class="w-4 h-4"></i>
                             <span>Submit to Partner Banks</span>
                         </button>
@@ -447,11 +571,13 @@
 
         <!-- Navigation Buttons Bottom Bar -->
         <div class="mt-8 flex justify-between items-center no-print">
-            <button id="prevBtn" onclick="prevStep()" class="px-6 py-2.5 rounded-xl border border-slate-300 text-slate-600 font-semibold hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition flex items-center space-x-2">
+            <button id="prevBtn" onclick="prevStep()"
+                class="px-6 py-2.5 rounded-xl border border-slate-300 text-slate-600 font-semibold hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition flex items-center space-x-2">
                 <i data-lucide="chevron-left" class="w-4 h-4"></i>
                 <span>Previous</span>
             </button>
-            <button id="nextBtn" onclick="nextStep()" class="px-8 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold shadow-md shadow-brand-500/20 transition flex items-center space-x-2">
+            <button id="nextBtn" onclick="nextStep()"
+                class="px-8 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold shadow-md shadow-brand-500/20 transition flex items-center space-x-2">
                 <span>Continue</span>
                 <i data-lucide="chevron-right" class="w-4 h-4"></i>
             </button>
@@ -460,14 +586,19 @@
     </main>
 
     <!-- Modal Notification Dialog -->
-    <div id="appModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div id="appModal"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl text-center">
-            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+            <div
+                class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
                 <i data-lucide="check" class="w-6 h-6"></i>
             </div>
             <h3 id="modalTitle" class="text-xl font-bold text-slate-900">Application Submitted!</h3>
-            <p id="modalBody" class="text-sm text-slate-500">Your ecosystem bundle quote has been sent to our partner banking underwriting team. An advisor will contact you within 24 hours.</p>
-            <button onclick="closeModal()" class="w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition">Return to Builder</button>
+            <p id="modalBody" class="text-sm text-slate-500">Your ecosystem bundle quote has been sent to our partner
+                banking underwriting team. An advisor will contact you within 24 hours.</p>
+            <button onclick="closeModal()"
+                class="w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition">Return to
+                Builder</button>
         </div>
     </div>
 
@@ -526,8 +657,8 @@
                 { id: 'i3', name: 'Smart Home Automation Package', type: 'IoT & Security', partner: 'TechSolutions Living', dim: 'Whole Home Sensor Suite', priceIDR: 22000000, img: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80' }
             ],
             exterior: [
-                { id: 'e1', name: 'Solar Car Canopy & Frame', type: 'Carport & Solar', partner: 'EcoStructures Builders', dim: '6m x 5m Dual Car Frame', priceIDR: 38000000, img: 'https://images.unsplash.com/photo-1508873696983-2df515122519?auto=format&fit=crop&w=600&q=80' },
-                { id: 'e2', name: 'Smart Motorized Security Gate', type: 'Gate & Security', partner: 'Fortress Gates', dim: '4m Wrought Iron Auto-Gate', priceIDR: 28000000, img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80' },
+                { id: 'e1', name: 'Solar Car Canopy & Frame', type: 'Carport & Solar', partner: 'EcoStructures Builders', dim: '6m x 5m Dual Car Frame', priceIDR: 38000000, img: 'https://images.unsplash.com/photo-1744212605604-fbf1159cc92f?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D' },
+                { id: 'e2', name: 'Smart Motorized Security Gate', type: 'Gate & Security', partner: 'Fortress Gates', dim: '4m Wrought Iron Auto-Gate', priceIDR: 28000000, img: 'https://images.unsplash.com/photo-1581571590992-6cbe9e14c3e2?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D' },
                 { id: 'e3', name: 'Tropical Garden & Patio Package', type: 'Landscaping', partner: 'GreenThumb Contractors', dim: '30m² Garden & Decking', priceIDR: 18000000, img: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=600&q=80' }
             ],
             car: [
@@ -559,7 +690,7 @@
             currency = curr;
             document.getElementById('currIDR').className = curr === 'IDR' ? 'px-3 py-1 rounded-full bg-white text-slate-900 shadow-sm transition-all' : 'px-3 py-1 rounded-full text-slate-600 hover:text-slate-900 transition-all';
             document.getElementById('currUSD').className = curr === 'USD' ? 'px-3 py-1 rounded-full bg-white text-slate-900 shadow-sm transition-all' : 'px-3 py-1 rounded-full text-slate-600 hover:text-slate-900 transition-all';
-            
+
             document.getElementById('incomeCurrSymbol').textContent = curr === 'USD' ? '$' : 'Rp';
             document.getElementById('debtCurrSymbol').textContent = curr === 'USD' ? '$' : 'Rp';
 
@@ -596,7 +727,7 @@
             const annualRate = 0.065;
             const monthlyRate = annualRate / 12;
             const totalMonths = userState.tenorYears * 12;
-            
+
             const monthly = (priceIDR * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -totalMonths));
             return monthly;
         }
@@ -872,4 +1003,5 @@
         }
     </script>
 </body>
+
 </html>
