@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Ecosystem Dream Builder - Unified Loan Application</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            900: '#134e4a',
+                        },
+                        accent: {
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(229, 231, 235, 0.8);
+        }
+        .step-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; color: black !important; }
+            .glass-card { border: none !important; shadow: none !important; background: transparent !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-accent-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                    <i data-lucide="home" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-lg text-slate-900 tracking-tight block leading-none">NestEcosystem</span>
+                    <span class="text-xs text-slate-500 font-medium">Unified Home & Lifestyle Loans</span>
+                </div>
+            </div>
+
+            <!-- Currency & Capacity Summary Badge -->
+            <div class="flex items-center space-x-4">
+                <div class="hidden md:flex items-center bg-slate-100 rounded-full p-1 border border-slate-200 text-xs font-semibold">
+                    <button id="currIDR" onclick="setCurrency('IDR')" class="px-3 py-1 rounded-full bg-white text-slate-900 shadow-sm transition-all">IDR (Rp)</button>
+                    <button id="currUSD" onclick="setCurrency('USD')" class="px-3 py-1 rounded-full text-slate-600 hover:text-slate-900 transition-all">USD ($)</button>
+                </div>
+                <div class="bg-brand-50 border border-brand-100 px-3 py-1.5 rounded-xl flex items-center space-x-2">
+                    <i data-lucide="calculator" class="w-4 h-4 text-brand-600"></i>
+                    <div>
+                        <div class="text-[10px] text-brand-700 font-semibold uppercase tracking-wider">Est. Monthly Outflow</div>
+                        <div id="headerEstMonthly" class="text-sm font-bold text-brand-900">Rp 0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Progress Tracker Bar -->
+        <div class="mb-8 no-print">
+            <div class="flex items-center justify-between mb-2 px-1">
+                <span id="stepTitleDisplay" class="text-xs font-bold uppercase tracking-wider text-brand-600">Step 1 of 8: Financial Capacity</span>
+                <span id="stepPercentDisplay" class="text-xs font-bold text-slate-500">12% Completed</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden p-0.5">
+                <div id="progressBar" class="bg-gradient-to-r from-brand-500 to-accent-500 h-full rounded-full transition-all duration-500 ease-out" style="width: 12.5%;"></div>
+            </div>
+            <!-- Interactive Step Indicator Pills -->
+            <div class="grid grid-cols-4 md:grid-cols-8 gap-2 mt-4 text-center text-xs font-medium">
+                <button onclick="goToStep(1)" id="pill-1" class="py-2 px-1 rounded-lg border border-brand-500 bg-brand-50 text-brand-700 font-semibold shadow-sm transition">1. Income</button>
+                <button onclick="goToStep(2)" id="pill-2" class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">2. Location</button>
+                <button onclick="goToStep(3)" id="pill-3" class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">3. Bundle</button>
+                <button onclick="goToStep(4)" id="pill-4" class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">4. Property</button>
+                <button onclick="goToStep(5)" id="pill-5" class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">5. Interior</button>
+                <button onclick="goToStep(6)" id="pill-6" class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">6. Exterior</button>
+                <button onclick="goToStep(7)" id="pill-7" class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">7. Vehicle</button>
+                <button onclick="goToStep(8)" id="pill-8" class="py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition">8. Quote</button>
+            </div>
+        </div>
+
+        <!-- FORM STEPS CONTENT AREA -->
+        <div class="relative">
+
+            <!-- STEP 1: FINANCIAL PROFILE -->
+            <div id="step-1" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
+                <div class="max-w-2xl mx-auto space-y-6">
+                    <div class="text-center space-y-2">
+                        <div class="w-12 h-12 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="wallet" class="w-6 h-6"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-slate-900">Your Financial Profile</h2>
+                        <p class="text-slate-500 text-sm">Let’s calculate your safe borrowing limits to customize your ecosystem loan options.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Monthly Net Income</label>
+                            <div class="relative rounded-xl shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 font-semibold" id="incomeCurrSymbol">Rp</div>
+                                <input type="number" id="monthlyIncome" value="35000000" oninput="calculateFinancialCapacity()" class="block w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-slate-900 font-semibold transition">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Existing Monthly Obligations</label>
+                            <div class="relative rounded-xl shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 font-semibold" id="debtCurrSymbol">Rp</div>
+                                <input type="number" id="existingDebt" value="3000000" oninput="calculateFinancialCapacity()" class="block w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-slate-900 font-semibold transition">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Employment Status</label>
+                            <select id="employmentStatus" class="block w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-slate-900 font-medium transition">
+                                <option value="fulltime">Full-Time Employee (> 3 Yrs History)</option>
+                                <option value="corporate">Corporate Manager / Executive</option>
+                                <option value="entrepreneur">Business Owner / Entrepreneur</option>
+                                <option value="freelance">Freelancer / Professional Specialist</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Preferred Loan Tenor</label>
+                            <select id="loanTenor" onchange="calculateFinancialCapacity()" class="block w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-slate-900 font-medium transition">
+                                <option value="5">5 Years (60 Months)</option>
+                                <option value="10">10 Years (120 Months)</option>
+                                <option value="15" selected>15 Years (180 Months)</option>
+                                <option value="20">20 Years (240 Months)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Live Debt Capacity Meter Card -->
+                    <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-slate-600 uppercase tracking-wider">Recommended Max Monthly Installment (40% DTI)</span>
+                            <span id="maxMonthlyBudgetDisplay" class="font-bold text-brand-700 text-sm">Rp 11,000,000</span>
+                        </div>
+                        <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                            <div id="dtiGauge" class="bg-brand-500 h-full rounded-full transition-all duration-300" style="width: 40%;"></div>
+                        </div>
+                        <div class="flex justify-between text-[11px] text-slate-500">
+                            <span>Safe DTI Limit: 40%</span>
+                            <span id="dtiRatioText">Current Obligations: 8.5%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: LOCATION SELECTOR -->
+            <div id="step-2" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
+                <div class="max-w-3xl mx-auto space-y-6">
+                    <div class="text-center space-y-2">
+                        <div class="w-12 h-12 bg-accent-500/10 text-accent-600 rounded-2xl flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="map-pin" class="w-6 h-6"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-slate-900">Project Location</h2>
+                        <p class="text-slate-500 text-sm">Choose the primary region for your home property and localized installation services.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+                        <!-- Location Option Cards -->
+                        <div onclick="selectLocation('Jakarta')" id="loc-Jakarta" class="location-card cursor-pointer p-5 rounded-2xl border-2 border-brand-500 bg-brand-50/50 hover:shadow-md transition text-center space-y-2">
+                            <div class="w-10 h-10 rounded-full bg-brand-500 text-white flex items-center justify-center mx-auto font-bold text-sm">JKT</div>
+                            <div class="font-bold text-slate-900">Jakarta</div>
+                            <div class="text-xs text-slate-500">DKI & Greater Metropolitan</div>
+                        </div>
+
+                        <div onclick="selectLocation('Bandung')" id="loc-Bandung" class="location-card cursor-pointer p-5 rounded-2xl border-2 border-slate-200 hover:border-brand-300 transition text-center space-y-2">
+                            <div class="w-10 h-10 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center mx-auto font-bold text-sm">BDG</div>
+                            <div class="font-bold text-slate-900">Bandung</div>
+                            <div class="text-xs text-slate-500">West Java Highlands</div>
+                        </div>
+
+                        <div onclick="selectLocation('Surabaya')" id="loc-Surabaya" class="location-card cursor-pointer p-5 rounded-2xl border-2 border-slate-200 hover:border-brand-300 transition text-center space-y-2">
+                            <div class="w-10 h-10 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center mx-auto font-bold text-sm">SUB</div>
+                            <div class="font-bold text-slate-900">Surabaya</div>
+                            <div class="text-xs text-slate-500">East Java Hub</div>
+                        </div>
+
+                        <div onclick="selectLocation('Bali')" id="loc-Bali" class="location-card cursor-pointer p-5 rounded-2xl border-2 border-slate-200 hover:border-brand-300 transition text-center space-y-2">
+                            <div class="w-10 h-10 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center mx-auto font-bold text-sm">DPS</div>
+                            <div class="font-bold text-slate-900">Bali</div>
+                            <div class="text-xs text-slate-500">Denpasar & Badung</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: CATEGORY CHECKBOX SELECTOR -->
+            <div id="step-3" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
+                <div class="max-w-3xl mx-auto space-y-6">
+                    <div class="text-center space-y-2">
+                        <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="layers" class="w-6 h-6"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-slate-900">Customize Ecosystem Bundle</h2>
+                        <p class="text-slate-500 text-sm">Select which elements you want to group into a single monthly loan repayment.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                        <!-- Category Toggles -->
+                        <label class="relative flex items-start p-5 rounded-2xl border-2 border-slate-200 cursor-pointer hover:bg-slate-50 transition selection-box">
+                            <div class="flex items-center h-6">
+                                <input type="checkbox" id="catHome" checked onchange="toggleCategory('home')" class="w-5 h-5 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
+                            </div>
+                            <div class="ml-4 space-y-1">
+                                <div class="flex items-center space-x-2">
+                                    <i data-lucide="home" class="w-4 h-4 text-brand-600"></i>
+                                    <span class="font-bold text-slate-900">1. Property & Real Estate</span>
+                                </div>
+                                <p class="text-xs text-slate-500">Houses, Townhouses, and Modern Apartments from Partner Developers.</p>
+                            </div>
+                        </label>
+
+                        <label class="relative flex items-start p-5 rounded-2xl border-2 border-slate-200 cursor-pointer hover:bg-slate-50 transition selection-box">
+                            <div class="flex items-center h-6">
+                                <input type="checkbox" id="catInterior" checked onchange="toggleCategory('interior')" class="w-5 h-5 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
+                            </div>
+                            <div class="ml-4 space-y-1">
+                                <div class="flex items-center space-x-2">
+                                    <i data-lucide="sofa" class="w-4 h-4 text-accent-600"></i>
+                                    <span class="font-bold text-slate-900">2. Interior & Living</span>
+                                </div>
+                                <p class="text-xs text-slate-500">Modular Kitchen Sets, Dining Packages, Smart Home Automation.</p>
+                            </div>
+                        </label>
+
+                        <label class="relative flex items-start p-5 rounded-2xl border-2 border-slate-200 cursor-pointer hover:bg-slate-50 transition selection-box">
+                            <div class="flex items-center h-6">
+                                <input type="checkbox" id="catExterior" checked onchange="toggleCategory('exterior')" class="w-5 h-5 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
+                            </div>
+                            <div class="ml-4 space-y-1">
+                                <div class="flex items-center space-x-2">
+                                    <i data-lucide="shield" class="w-4 h-4 text-emerald-600"></i>
+                                    <span class="font-bold text-slate-900">3. Exterior & Canopy</span>
+                                </div>
+                                <p class="text-xs text-slate-500">Carport Canopies, Automatic Security Gates, Landscaping.</p>
+                            </div>
+                        </label>
+
+                        <label class="relative flex items-start p-5 rounded-2xl border-2 border-slate-200 cursor-pointer hover:bg-slate-50 transition selection-box">
+                            <div class="flex items-center h-6">
+                                <input type="checkbox" id="catCar" checked onchange="toggleCategory('car')" class="w-5 h-5 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
+                            </div>
+                            <div class="ml-4 space-y-1">
+                                <div class="flex items-center space-x-2">
+                                    <i data-lucide="car" class="w-4 h-4 text-rose-600"></i>
+                                    <span class="font-bold text-slate-900">4. Vehicle & Mobility</span>
+                                </div>
+                                <p class="text-xs text-slate-500">Family EVs, Premium Sedans, SUVs from Partner Dealerships.</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 4: PROPERTY SELECTION -->
+            <div id="step-4" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
+                <div class="space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Partner Module</span>
+                            <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
+                                <span>Select Property Partner Listing</span>
+                                <span id="propLocBadge" class="text-xs font-normal px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">Jakarta</span>
+                            </h2>
+                        </div>
+                        <div class="text-xs text-slate-500">Showing verified listings with pre-cleared land titles</div>
+                    </div>
+
+                    <!-- Property Cards Grid -->
+                    <div id="propertyGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 5: INTERIOR SELECTION -->
+            <div id="step-5" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
+                <div class="space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-accent-600 uppercase tracking-wider">Interior Design Vendors</span>
+                            <h2 class="text-xl font-bold text-slate-900">Select Interior & Furnishing Bundle</h2>
+                        </div>
+                        <div class="text-xs text-slate-500">Includes professional measuring & full setup</div>
+                    </div>
+
+                    <!-- Interior Cards Grid -->
+                    <div id="interiorGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 6: EXTERIOR SELECTION -->
+            <div id="step-6" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
+                <div class="space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Exterior Contractors</span>
+                            <h2 class="text-xl font-bold text-slate-900">Select Exterior Structures & Gate</h2>
+                        </div>
+                        <div class="text-xs text-slate-500">Weather-proofed with 5-year structural warranty</div>
+                    </div>
+
+                    <!-- Exterior Cards Grid -->
+                    <div id="exteriorGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 7: CAR SELECTION -->
+            <div id="step-7" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
+                <div class="space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-rose-600 uppercase tracking-wider">Automotive Partners</span>
+                            <h2 class="text-xl font-bold text-slate-900">Select Family Vehicle</h2>
+                        </div>
+                        <div class="text-xs text-slate-500">Bundled auto insurance & free 3-year service included</div>
+                    </div>
+
+                    <!-- Car Cards Grid -->
+                    <div id="carGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 8: SUMMARY & UNIFIED QUOTE RECEIPT -->
+            <div id="step-8" class="step-card bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hidden">
+                <div class="max-w-4xl mx-auto space-y-8">
+                    
+                    <div class="text-center space-y-2">
+                        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold uppercase tracking-wider">Verified Bundle Assessment</span>
+                        <h2 class="text-3xl font-extrabold text-slate-900">Unified Loan Quote Summary</h2>
+                        <p class="text-slate-500 text-sm">Review your custom ecosystem package breakdown and simulated bank repayment plan.</p>
+                    </div>
+
+                    <!-- Receipt Container -->
+                    <div id="printableQuote" class="bg-slate-50 border border-slate-200 rounded-2xl p-6 md:p-8 space-y-6">
+                        
+                        <!-- Header / Metadata -->
+                        <div class="flex flex-col md:flex-row justify-between border-b border-slate-200 pb-6 gap-4">
+                            <div>
+                                <div class="font-bold text-slate-900 text-lg">NestEcosystem Facility Simulation</div>
+                                <div class="text-xs text-slate-500" id="quoteReferenceNo">Ref: NES-2026-948271</div>
+                                <div class="text-xs text-slate-500" id="quoteDate">Date: Oct 30, 2026</div>
+                            </div>
+                            <div class="text-left md:text-right">
+                                <div class="text-xs text-slate-500">Selected Region</div>
+                                <div class="font-bold text-slate-900" id="quoteLoc">Jakarta</div>
+                                <div class="text-xs text-slate-500" id="quoteTenor">Tenor: 15 Years (180 Mos)</div>
+                            </div>
+                        </div>
+
+                        <!-- Selected Items Table -->
+                        <div class="space-y-3">
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Bundled Ecosystem Assets</div>
+                            <div id="quoteItemsList" class="divide-y divide-slate-200">
+                                <!-- Dynamic breakdown rows -->
+                            </div>
+                        </div>
+
+                        <!-- Financial Calculation Details -->
+                        <div class="pt-4 border-t border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                                <div class="text-xs font-bold text-slate-500 uppercase">Capital Sum Breakdown</div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-600">Total Asset Value:</span>
+                                    <span id="quoteTotalAsset" class="font-bold text-slate-900">Rp 0</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-600">Estimated Bank Interest (6.5% p.a.):</span>
+                                    <span class="font-medium text-slate-700">Included (Fixed)</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-gradient-to-br from-brand-900 to-slate-900 text-white p-5 rounded-xl space-y-2 shadow-lg">
+                                <div class="text-xs font-semibold text-brand-300 uppercase tracking-wider">Unified Monthly Repayment</div>
+                                <div id="quoteGrandMonthly" class="text-3xl font-extrabold text-white">Rp 0</div>
+                                <div class="text-[11px] text-brand-200">Single automatic debited payment across all partner items</div>
+                            </div>
+                        </div>
+
+                        <!-- Affordability Analysis Gauge -->
+                        <div id="affordabilityAlert" class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start space-x-3">
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+                            <div>
+                                <div id="affordabilityStatusTitle" class="font-bold text-emerald-900 text-sm">Excellent Financial Capacity</div>
+                                <div id="affordabilityStatusDesc" class="text-xs text-emerald-700">Your total estimated monthly outflow falls comfortably within your recommended maximum budget limit.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Controls -->
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 no-print">
+                        <button onclick="window.print()" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold flex items-center justify-center space-x-2 transition">
+                            <i data-lucide="printer" class="w-4 h-4"></i>
+                            <span>Print / Download Quote PDF</span>
+                        </button>
+                        <button onclick="submitApplication()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 hover:from-brand-500 hover:to-accent-500 text-white font-bold flex items-center justify-center space-x-2 shadow-lg shadow-brand-500/25 transition">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            <span>Submit to Partner Banks</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navigation Buttons Bottom Bar -->
+        <div class="mt-8 flex justify-between items-center no-print">
+            <button id="prevBtn" onclick="prevStep()" class="px-6 py-2.5 rounded-xl border border-slate-300 text-slate-600 font-semibold hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition flex items-center space-x-2">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                <span>Previous</span>
+            </button>
+            <button id="nextBtn" onclick="nextStep()" class="px-8 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold shadow-md shadow-brand-500/20 transition flex items-center space-x-2">
+                <span>Continue</span>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Modal Notification Dialog -->
+    <div id="appModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl text-center">
+            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+                <i data-lucide="check" class="w-6 h-6"></i>
+            </div>
+            <h3 id="modalTitle" class="text-xl font-bold text-slate-900">Application Submitted!</h3>
+            <p id="modalBody" class="text-sm text-slate-500">Your ecosystem bundle quote has been sent to our partner banking underwriting team. An advisor will contact you within 24 hours.</p>
+            <button onclick="closeModal()" class="w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition">Return to Builder</button>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // Data Structures & State Management
+        let currentStep = 1;
+        let currency = 'IDR'; // 'IDR' or 'USD'
+        const IDR_PER_USD = 15500;
+
+        let userState = {
+            monthlyIncome: 35000000,
+            existingDebt: 3000000,
+            tenorYears: 15,
+            location: 'Jakarta',
+            enabledCategories: {
+                home: true,
+                interior: true,
+                exterior: true,
+                car: true
+            },
+            selectedSelections: {
+                home: 'p1',
+                interior: 'i1',
+                exterior: 'e1',
+                car: 'c1'
+            }
+        };
+
+        // Partner Database
+        const PARTNER_DATA = {
+            home: [
+                // Jakarta Properties
+                { id: 'p1', name: 'Emerald Modern Townhouse', type: 'Residential House', partner: 'Urban Nest Agency', location: 'Jakarta', dim: '120m² (3 Bed, 2 Bath)', priceIDR: 1250000000, img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80' },
+                { id: 'p2', name: 'Skyline Executive Suite', type: 'High-Rise Apartment', partner: 'Skyline Developers', location: 'Jakarta', dim: '65m² (2 Bed, 1 Bath)', priceIDR: 850000000, img: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80' },
+                { id: 'p5', name: 'Senopati Chic Minimalist Loft', type: 'Studio Loft Apartment', partner: 'Capital Luxury Realty', location: 'Jakarta', dim: '52m² (1 Bed, 1 Bath)', priceIDR: 980000000, img: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80' },
+                { id: 'p6', name: 'PIK Waterfront Smart Home', type: 'Cluster House', partner: 'Coastal Haven Agency', location: 'Jakarta', dim: '160m² (4 Bed, 3 Bath)', priceIDR: 1850000000, img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80' },
+
+                // Bandung Properties
+                { id: 'p3', name: 'Parahyangan Valley Villa', type: 'Cluster Residence', partner: 'Bandung Living Real Estate', location: 'Bandung', dim: '150m² (4 Bed, 3 Bath)', priceIDR: 1100000000, img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80' },
+                { id: 'p7', name: 'Dago Hillside Eco Cottage', type: 'Hilltop Cottage', partner: 'Mountain View Realty', location: 'Bandung', dim: '110m² (2 Bed, 2 Bath)', priceIDR: 790000000, img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=600&q=80' },
+                { id: 'p8', name: 'Setiabudi Heritage Townhouse', type: 'Modern Townhouse', partner: 'Bandung Living Real Estate', location: 'Bandung', dim: '135m² (3 Bed, 2 Bath)', priceIDR: 950000000, img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=600&q=80' },
+
+                // Surabaya Properties
+                { id: 'p9', name: 'Pakuwon City Compact Villa', type: 'Modern Residence', partner: 'East Java Realty Hub', location: 'Surabaya', dim: '140m² (3 Bed, 2 Bath)', priceIDR: 1050000000, img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=600&q=80' },
+                { id: 'p10', name: 'Surabaya Center High Suite', type: 'Luxury Apartment', partner: 'Metropolitan Surabaya', location: 'Surabaya', dim: '75m² (2 Bed, 2 Bath)', priceIDR: 720000000, img: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80' },
+
+                // Bali Properties
+                { id: 'p4', name: 'Canggu Eco Loft Apartment', type: 'Boutique Apartment', partner: 'Bali Haven Realty', location: 'Bali', dim: '80m² (1 Bed Pool Loft)', priceIDR: 1400000000, img: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=600&q=80' },
+                { id: 'p11', name: 'Ubud Tropical Sanctuary Villa', type: 'Private Pool Villa', partner: 'Isle Sanctuary Estates', location: 'Bali', dim: '180m² (2 Bed, 2 Bath)', priceIDR: 1950000000, img: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=600&q=80' },
+                { id: 'p12', name: 'Sanur Coastal Starter Home', type: 'Resort Residence', partner: 'Bali Haven Realty', location: 'Bali', dim: '100m² (2 Bed, 1 Bath)', priceIDR: 1150000000, img: 'https://images.unsplash.com/photo-1576941089067-2de3c901e126?auto=format&fit=crop&w=600&q=80' }
+            ],
+            interior: [
+                { id: 'i1', name: 'Modular Minimalist Kitchen Set', type: 'Kitchen Package', partner: 'Design Studio Pro', dim: '4.5m Length Custom Granite', priceIDR: 45000000, img: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80' },
+                { id: 'i2', name: 'Nordic Living & Dining Suite', type: 'Furnishing Suite', partner: 'IKEA Home Partner', dim: 'Full Living + 6-Seat Table', priceIDR: 35000000, img: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=600&q=80' },
+                { id: 'i3', name: 'Smart Home Automation Package', type: 'IoT & Security', partner: 'TechSolutions Living', dim: 'Whole Home Sensor Suite', priceIDR: 22000000, img: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80' }
+            ],
+            exterior: [
+                { id: 'e1', name: 'Solar Car Canopy & Frame', type: 'Carport & Solar', partner: 'EcoStructures Builders', dim: '6m x 5m Dual Car Frame', priceIDR: 38000000, img: 'https://images.unsplash.com/photo-1508873696983-2df515122519?auto=format&fit=crop&w=600&q=80' },
+                { id: 'e2', name: 'Smart Motorized Security Gate', type: 'Gate & Security', partner: 'Fortress Gates', dim: '4m Wrought Iron Auto-Gate', priceIDR: 28000000, img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80' },
+                { id: 'e3', name: 'Tropical Garden & Patio Package', type: 'Landscaping', partner: 'GreenThumb Contractors', dim: '30m² Garden & Decking', priceIDR: 18000000, img: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=600&q=80' }
+            ],
+            car: [
+                { id: 'c1', name: 'Mercedes-Benz A-Class A200', type: 'Premium Hatchback', partner: 'Star Auto Group', dim: '4,419 mm L x 1,796 mm W', priceIDR: 780000000, img: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=600&q=80' },
+                { id: 'c2', name: 'BMW 320i M Sport', type: 'Luxury Executive Sedan', partner: 'City Motors Dealership', dim: '4,709 mm L x 1,827 mm W', priceIDR: 920000000, img: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=600&q=80' },
+                { id: 'c3', name: 'Hyundai IONIQ 5 EV', type: 'Electric SUV', partner: 'Green Auto Mobility', dim: '4,635 mm L x 1,890 mm W', priceIDR: 750000000, img: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=600&q=80' }
+            ]
+        };
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            calculateFinancialCapacity();
+            renderAllGrids();
+            updateUI();
+        });
+
+        // Currency Formatting Helpers
+        function formatMoney(amountIDR) {
+            if (currency === 'USD') {
+                const usd = amountIDR / IDR_PER_USD;
+                return '$' + Math.round(usd).toLocaleString('en-US');
+            } else {
+                return 'Rp ' + Math.round(amountIDR).toLocaleString('id-ID');
+            }
+        }
+
+        function setCurrency(curr) {
+            currency = curr;
+            document.getElementById('currIDR').className = curr === 'IDR' ? 'px-3 py-1 rounded-full bg-white text-slate-900 shadow-sm transition-all' : 'px-3 py-1 rounded-full text-slate-600 hover:text-slate-900 transition-all';
+            document.getElementById('currUSD').className = curr === 'USD' ? 'px-3 py-1 rounded-full bg-white text-slate-900 shadow-sm transition-all' : 'px-3 py-1 rounded-full text-slate-600 hover:text-slate-900 transition-all';
+            
+            document.getElementById('incomeCurrSymbol').textContent = curr === 'USD' ? '$' : 'Rp';
+            document.getElementById('debtCurrSymbol').textContent = curr === 'USD' ? '$' : 'Rp';
+
+            calculateFinancialCapacity();
+            renderAllGrids();
+            updateSummaryQuote();
+        }
+
+        // Financial Calculation Logic
+        function calculateFinancialCapacity() {
+            const incomeInput = parseFloat(document.getElementById('monthlyIncome').value) || 0;
+            const debtInput = parseFloat(document.getElementById('existingDebt').value) || 0;
+            const tenorYears = parseInt(document.getElementById('loanTenor').value) || 15;
+
+            userState.monthlyIncome = currency === 'USD' ? incomeInput * IDR_PER_USD : incomeInput;
+            userState.existingDebt = currency === 'USD' ? debtInput * IDR_PER_USD : debtInput;
+            userState.tenorYears = tenorYears;
+
+            const maxAllowedMonthlyOutflow = userState.monthlyIncome * 0.40; // 40% DTI
+            const netCap = Math.max(0, maxAllowedMonthlyOutflow - userState.existingDebt);
+
+            document.getElementById('maxMonthlyBudgetDisplay').textContent = formatMoney(netCap);
+
+            // DTI Gauge calculation
+            const dtiPercent = userState.monthlyIncome > 0 ? ((userState.existingDebt / userState.monthlyIncome) * 100).toFixed(1) : 0;
+            document.getElementById('dtiGauge').style.width = Math.min(100, dtiPercent * 2.5) + '%';
+            document.getElementById('dtiRatioText').textContent = `Current Obligations: ${dtiPercent}% of Income`;
+
+            updateHeaderSummary();
+        }
+
+        function calculateMonthlyPaymentForItem(priceIDR) {
+            // Simplified ecosystem annuity formula (6.5% interest rate p.a.)
+            const annualRate = 0.065;
+            const monthlyRate = annualRate / 12;
+            const totalMonths = userState.tenorYears * 12;
+            
+            const monthly = (priceIDR * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -totalMonths));
+            return monthly;
+        }
+
+        function calculateTotalSelectedAssetValue() {
+            let total = 0;
+            if (userState.enabledCategories.home) {
+                const item = PARTNER_DATA.home.find(x => x.id === userState.selectedSelections.home);
+                if (item) total += item.priceIDR;
+            }
+            if (userState.enabledCategories.interior) {
+                const item = PARTNER_DATA.interior.find(x => x.id === userState.selectedSelections.interior);
+                if (item) total += item.priceIDR;
+            }
+            if (userState.enabledCategories.exterior) {
+                const item = PARTNER_DATA.exterior.find(x => x.id === userState.selectedSelections.exterior);
+                if (item) total += item.priceIDR;
+            }
+            if (userState.enabledCategories.car) {
+                const item = PARTNER_DATA.car.find(x => x.id === userState.selectedSelections.car);
+                if (item) total += item.priceIDR;
+            }
+            return total;
+        }
+
+        function updateHeaderSummary() {
+            const totalAsset = calculateTotalSelectedAssetValue();
+            const totalMonthly = calculateMonthlyPaymentForItem(totalAsset);
+            document.getElementById('headerEstMonthly').textContent = formatMoney(totalMonthly) + '/mo';
+        }
+
+        // Navigation Stepper Logic
+        function goToStep(step) {
+            if (step < 1 || step > 8) return;
+
+            // Hide all steps
+            for (let i = 1; i <= 8; i++) {
+                const card = document.getElementById(`step-${i}`);
+                if (card) card.classList.add('hidden');
+
+                const pill = document.getElementById(`pill-${i}`);
+                if (pill) {
+                    if (i === step) {
+                        pill.className = "py-2 px-1 rounded-lg border border-brand-500 bg-brand-50 text-brand-700 font-semibold shadow-sm transition";
+                    } else {
+                        pill.className = "py-2 px-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition";
+                    }
+                }
+            }
+
+            // Show active step
+            currentStep = step;
+            document.getElementById(`step-${step}`).classList.remove('hidden');
+
+            // Update Progress Bar
+            const percent = Math.round((step / 8) * 100);
+            document.getElementById('progressBar').style.width = `${percent}%`;
+            document.getElementById('stepPercentDisplay').textContent = `${percent}% Completed`;
+
+            const stepNames = [
+                "Financial Capacity",
+                "Project Location",
+                "Ecosystem Bundle Selection",
+                "Property Partner Listing",
+                "Interior & Furnishing Vendor",
+                "Exterior Contractor Service",
+                "Automotive Dealer Selection",
+                "Final Quote Assessment"
+            ];
+            document.getElementById('stepTitleDisplay').textContent = `Step ${step} of 8: ${stepNames[step - 1]}`;
+
+            // Control Prev/Next buttons visibility
+            document.getElementById('prevBtn').disabled = (step === 1);
+            if (step === 8) {
+                document.getElementById('nextBtn').classList.add('hidden');
+                updateSummaryQuote();
+            } else {
+                document.getElementById('nextBtn').classList.remove('hidden');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextStep() {
+            // Skip disabled category steps automatically
+            let targetStep = currentStep + 1;
+            if (targetStep === 4 && !userState.enabledCategories.home) targetStep++;
+            if (targetStep === 5 && !userState.enabledCategories.interior) targetStep++;
+            if (targetStep === 6 && !userState.enabledCategories.exterior) targetStep++;
+            if (targetStep === 7 && !userState.enabledCategories.car) targetStep++;
+
+            goToStep(targetStep);
+        }
+
+        function prevStep() {
+            let targetStep = currentStep - 1;
+            if (targetStep === 7 && !userState.enabledCategories.car) targetStep--;
+            if (targetStep === 6 && !userState.enabledCategories.exterior) targetStep--;
+            if (targetStep === 5 && !userState.enabledCategories.interior) targetStep--;
+            if (targetStep === 4 && !userState.enabledCategories.home) targetStep--;
+
+            goToStep(targetStep);
+        }
+
+        // Location & Category Selectors
+        function selectLocation(loc) {
+            userState.location = loc;
+            document.querySelectorAll('.location-card').forEach(el => {
+                el.className = 'location-card cursor-pointer p-5 rounded-2xl border-2 border-slate-200 hover:border-brand-300 transition text-center space-y-2';
+            });
+            const selectedEl = document.getElementById(`loc-${loc}`);
+            if (selectedEl) {
+                selectedEl.className = 'location-card cursor-pointer p-5 rounded-2xl border-2 border-brand-500 bg-brand-50/50 hover:shadow-md transition text-center space-y-2';
+            }
+            document.getElementById('propLocBadge').textContent = loc;
+            renderAllGrids();
+        }
+
+        function toggleCategory(cat) {
+            userState.enabledCategories[cat] = document.getElementById(`cat${cat.charAt(0).toUpperCase() + cat.slice(1)}`).checked;
+            updateHeaderSummary();
+        }
+
+        function selectItem(cat, itemId) {
+            userState.selectedSelections[cat] = itemId;
+            renderCategoryGrid(cat);
+            updateHeaderSummary();
+        }
+
+        // Grid Rendering Engine
+        function renderCategoryGrid(cat) {
+            const container = document.getElementById(`${cat}Grid`);
+            if (!container) return;
+
+            let items = PARTNER_DATA[cat];
+            if (cat === 'home') {
+                items = items.filter(x => x.location === userState.location);
+                if (items.length === 0) {
+                    items = PARTNER_DATA.home; // Fallback to all if location has no exact match
+                }
+            }
+
+            container.innerHTML = items.map(item => {
+                const isSelected = userState.selectedSelections[cat] === item.id;
+                const monthly = calculateMonthlyPaymentForItem(item.priceIDR);
+
+                return `
+                    <div onclick="selectItem('${cat}', '${item.id}')" class="cursor-pointer rounded-2xl border-2 ${isSelected ? 'border-brand-500 bg-brand-50/20 shadow-lg' : 'border-slate-200 bg-white hover:border-slate-300'} overflow-hidden transition-all duration-200 flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-44 w-full bg-slate-100 overflow-hidden">
+                                <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover">
+                                <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] font-bold text-slate-800 shadow-sm">
+                                    ${item.type}
+                                </span>
+                                ${isSelected ? `
+                                    <div class="absolute top-3 right-3 bg-brand-500 text-white w-7 h-7 rounded-full flex items-center justify-center shadow-md">
+                                        <i data-lucide="check" class="w-4 h-4"></i>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="p-5 space-y-3">
+                                <div>
+                                    <div class="text-xs font-semibold text-brand-600">${item.partner}</div>
+                                    <h3 class="font-bold text-slate-900 leading-snug">${item.name}</h3>
+                                </div>
+                                <div class="text-xs text-slate-500 flex items-center space-x-1">
+                                    <i data-lucide="ruler" class="w-3.5 h-3.5"></i>
+                                    <span>${item.dim}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="px-5 pb-5 pt-0 border-t border-slate-100/80 mt-2 flex justify-between items-end">
+                            <div>
+                                <div class="text-[10px] uppercase font-bold text-slate-400">Total Asset Price</div>
+                                <div class="font-extrabold text-slate-900">${formatMoney(item.priceIDR)}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-[10px] uppercase font-bold text-brand-600">Simulated</div>
+                                <div class="text-sm font-bold text-brand-700">${formatMoney(monthly)}/mo</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function renderAllGrids() {
+            renderCategoryGrid('home');
+            renderCategoryGrid('interior');
+            renderCategoryGrid('exterior');
+            renderCategoryGrid('car');
+        }
+
+        // Summary & Quote Generator (Step 8)
+        function updateSummaryQuote() {
+            document.getElementById('quoteLoc').textContent = userState.location;
+            document.getElementById('quoteTenor').textContent = `Tenor: ${userState.tenorYears} Years (${userState.tenorYears * 12} Mos)`;
+
+            const itemsListContainer = document.getElementById('quoteItemsList');
+            let itemsHtml = '';
+            let totalAssetValue = 0;
+
+            const categories = [
+                { key: 'home', label: 'Property Asset' },
+                { key: 'interior', label: 'Interior Package' },
+                { key: 'exterior', label: 'Exterior Upgrade' },
+                { key: 'car', label: 'Family Vehicle' }
+            ];
+
+            categories.forEach(cat => {
+                if (userState.enabledCategories[cat.key]) {
+                    const item = PARTNER_DATA[cat.key].find(x => x.id === userState.selectedSelections[cat.key]);
+                    if (item) {
+                        totalAssetValue += item.priceIDR;
+                        const monthly = calculateMonthlyPaymentForItem(item.priceIDR);
+                        itemsHtml += `
+                            <div class="py-3 flex justify-between items-center text-sm">
+                                <div>
+                                    <div class="font-bold text-slate-800">${item.name}</div>
+                                    <div class="text-xs text-slate-500">${cat.label} • Partner: ${item.partner}</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-slate-900">${formatMoney(item.priceIDR)}</div>
+                                    <div class="text-xs text-brand-600 font-semibold">${formatMoney(monthly)}/mo</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            });
+
+            if (!itemsHtml) {
+                itemsHtml = `<div class="py-4 text-center text-slate-400 text-sm">No ecosystem items selected in bundle.</div>`;
+            }
+
+            itemsListContainer.innerHTML = itemsHtml;
+
+            const totalMonthly = calculateMonthlyPaymentForItem(totalAssetValue);
+            document.getElementById('quoteTotalAsset').textContent = formatMoney(totalAssetValue);
+            document.getElementById('quoteGrandMonthly').textContent = formatMoney(totalMonthly) + '/mo';
+
+            // Affordability Logic Assessment
+            const maxCap = Math.max(0, (userState.monthlyIncome * 0.40) - userState.existingDebt);
+            const alertBox = document.getElementById('affordabilityAlert');
+            const alertTitle = document.getElementById('affordabilityStatusTitle');
+            const alertDesc = document.getElementById('affordabilityStatusDesc');
+
+            if (totalMonthly <= maxCap) {
+                alertBox.className = "p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start space-x-3";
+                alertTitle.textContent = "Safe Financial Assessment";
+                alertTitle.className = "font-bold text-emerald-900 text-sm";
+                alertDesc.textContent = `Your total combined monthly payment of ${formatMoney(totalMonthly)} is within your recommended safe cap (${formatMoney(maxCap)}/mo).`;
+            } else {
+                alertBox.className = "p-4 rounded-xl bg-amber-50 border border-amber-200 flex items-start space-x-3";
+                alertTitle.textContent = "Capacity Warning: Exceeds Recommended DTI";
+                alertTitle.className = "font-bold text-amber-900 text-sm";
+                alertDesc.textContent = `Your monthly payment (${formatMoney(totalMonthly)}) exceeds your safe monthly limit (${formatMoney(maxCap)}). Consider extending your loan tenor or choosing lower-cost asset options.`;
+            }
+        }
+
+        function submitApplication() {
+            document.getElementById('appModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('appModal').classList.add('hidden');
+        }
+
+        function updateUI() {
+            goToStep(1);
+        }
+    </script>
+</body>
+</html>
